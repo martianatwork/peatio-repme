@@ -55,6 +55,7 @@ module Peatio
 
       def build_transaction(tx_hash)
         tx_hash = client.json_rpc(:getrawtransaction, [tx_hash, 1])
+        return [] if !tx_hash.fetch('vout').nil? && !tx_hash.fetch('vout')[0].nil? && tx_hash.fetch('vout')[0]['scriptPubKey']['type'] == 'nonstandard'
         tx_hash.fetch('vout')
           .select do |entry|
           entry.fetch('value').to_d > 0 &&
